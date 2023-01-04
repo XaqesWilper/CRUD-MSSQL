@@ -182,66 +182,101 @@ go
 
 
 -- exec spu_ins_tm_Cliente 'Papelera Naciona S.A.','Calle Luisa Beasujeur 2450, LIma','20100047641'
-
-CREATE PROCEDURE [dbo].[spu_ins_tm_Cliente] (  
-     @ds_tmc_Cliente varchar(100) = NULL  
-    ,@tmc_ruc char(12) = NULL  
-    ,@tmc_Direccion varchar(100) = NULL  
-    ,@tmc_FechaRegistro datetime = NULL  
-)  
-AS  
-    BEGIN  
-        SET NOCOUNT, XACT_ABORT ON;  
   
-        /* Create temporary table to store the output */  
-        CREATE TABLE #Output (  
-             [id_tmc_Cliente] int NULL  
-            ,[ds_tmc_Cliente] varchar(100) NULL  
-            ,[tmc_ruc] char(12) NULL  
-            ,[tmc_Direccion] varchar(100) NULL  
-            ,[tmc_FechaRegistro] datetime NULL  
-        );  
+CREATE PROCEDURE [dbo].[spu_ins_tm_Cliente] (    
+     @ds_tmc_Cliente varchar(100) = NULL    
+    ,@tmc_ruc char(12) = NULL    
+    ,@tmc_Direccion varchar(100) = NULL    
+    ,@tmc_FechaRegistro datetime = NULL    
+)    
+AS    
+    BEGIN    
+        SET NOCOUNT, XACT_ABORT ON;    
+    
+        /* Create temporary table to store the output */    
+        CREATE TABLE #Output (    
+             [id_tmc_Cliente] int NULL    
+            ,[ds_tmc_Cliente] varchar(100) NULL    
+            ,[tmc_ruc] char(12) NULL    
+            ,[tmc_Direccion] varchar(100) NULL    
+            ,[tmc_FechaRegistro] datetime NULL    
+        );    
+    
+        /* Perform the create (insert) */    
+        INSERT INTO [dbo].[tm_Cliente] (    
+                [ds_tmc_Cliente]    
+               ,[tmc_ruc]    
+               ,[tmc_Direccion]    
+               ,[tmc_FechaRegistro]    
+        )    
+        OUTPUT    
+                Inserted.[id_tmc_Cliente]    
+               ,Inserted.[ds_tmc_Cliente]    
+               ,Inserted.[tmc_ruc]    
+               ,Inserted.[tmc_Direccion]    
+               ,Inserted.[tmc_FechaRegistro]    
+        INTO #Output (    
+                [id_tmc_Cliente]    
+               ,[ds_tmc_Cliente]    
+               ,[tmc_ruc]    
+               ,[tmc_Direccion]    
+               ,[tmc_FechaRegistro]    
+        )    
+        VALUES (    
+                @ds_tmc_Cliente    
+               ,@tmc_ruc    
+               ,@tmc_Direccion    
+               ,@tmc_FechaRegistro    
+        );    
+    
+        /* Select the inserted row from the output temporary table to return */    
+        SELECT    
+             [id_tmc_Cliente]    
+            ,[ds_tmc_Cliente]    
+            ,[tmc_ruc]    
+            ,[tmc_Direccion]    
+            ,[tmc_FechaRegistro]    
+        FROM    
+            #Output;    
+    
+    END;    
   
-        /* Perform the create (insert) */  
-        INSERT INTO [dbo].[tm_Cliente] (  
-                [ds_tmc_Cliente]  
-               ,[tmc_ruc]  
-               ,[tmc_Direccion]  
-               ,[tmc_FechaRegistro]  
-        )  
-        OUTPUT  
-                Inserted.[id_tmc_Cliente]  
-               ,Inserted.[ds_tmc_Cliente]  
-               ,Inserted.[tmc_ruc]  
-               ,Inserted.[tmc_Direccion]  
-               ,Inserted.[tmc_FechaRegistro]  
-        INTO #Output (  
-                [id_tmc_Cliente]  
-               ,[ds_tmc_Cliente]  
-               ,[tmc_ruc]  
-               ,[tmc_Direccion]  
-               ,[tmc_FechaRegistro]  
-        )  
-        VALUES (  
-                @ds_tmc_Cliente  
-               ,@tmc_ruc  
-               ,@tmc_Direccion  
-               ,@tmc_FechaRegistro  
-        );  
-  
-        /* Select the inserted row from the output temporary table to return */  
-        SELECT  
-             [id_tmc_Cliente]  
-            ,[ds_tmc_Cliente]  
-            ,[tmc_ruc]  
-            ,[tmc_Direccion]  
-            ,[tmc_FechaRegistro]  
-        FROM  
-            #Output;  
-  
-    END;  
-
-
+    
+    
+CREATE PROCEDURE [dbo].[spu_upd_tm_Cliente] (      
+     @id_tmc_Cliente int = NULL      
+    ,@ds_tmc_Cliente varchar(100) = NULL      
+    ,@tmc_ruc char(12) = NULL      
+    ,@tmc_Direccion varchar(100) = NULL      
+    ,@tmc_FechaRegistro datetime = NULL      
+)      
+AS      
+    BEGIN      
+        SET NOCOUNT, XACT_ABORT ON;      
+      
+        /* Create temporary table to store the output */      
+        CREATE TABLE #Output (      
+             [id_tmc_Cliente] int NULL      
+            ,[ds_tmc_Cliente] varchar(100) NULL      
+            ,[tmc_ruc] char(12) NULL      
+            ,[tmc_Direccion] varchar(100) NULL      
+            ,[tmc_FechaRegistro] datetime NULL      
+        );      
+      
+        /* Perform the update */      
+        UPDATE      
+            [dbo].[tm_Cliente] WITH (UPDLOCK, SERIALIZABLE)      
+        SET      
+             [ds_tmc_Cliente] = @ds_tmc_Cliente      
+            ,[tmc_ruc] = @tmc_ruc      
+            ,[tmc_Direccion] = @tmc_Direccion      
+            ,[tmc_FechaRegistro] = @tmc_FechaRegistro      
+   
+        WHERE      
+            [id_tmc_Cliente] = @id_tmc_Cliente;      
+      
+    END;   
+    
 CREATE PROCEDURE [dbo].[spu_ins_tm_Producto] (  
      @ds_tmp_Producto varchar(50) = NULL  
     ,@ds_tmp_Precio decimal(10, 3) = NULL  
@@ -317,3 +352,8 @@ AS
         WHERE  
             [id_tmp_Producto] = @id_tmp_Producto;  
     END;      
+
+
+
+
+
