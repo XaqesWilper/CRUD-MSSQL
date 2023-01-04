@@ -1,7 +1,8 @@
 
-
+-- https://github.com/kevinmartintech/sp_CRUDGen/blob/main/sp_CRUDGen.sql
 -- 2023-01-02
 -- Version 1.0.0.0 
+
 
 use CrudSql
 
@@ -127,22 +128,22 @@ go
 -- STORED PROCEDURES DE CONSULTAS 
 --------------------------------------
 
--- Exec [spu_Consulta_Cliente_Td]
-CREATE PROCEDURE [spu_Consulta_Cliente_Td]
+-- Exec [spu_Sel_Cliente_Td]
+CREATE PROCEDURE [spu_Sel_Cliente_Td]
 AS
 	BEGIN
 		Select id_tmc_Cliente, ds_tmc_Cliente,	tmc_ruc,	tmc_Direccion  from tm_Cliente
 	End 
 go
--- Exec [spu_Consulta_Producto_Td]
-CREATE PROCEDURE [spu_Consulta_Producto_Td]
+-- Exec [spu_Sel_Producto_Td]
+CREATE PROCEDURE [spu_Sel_Producto_Td]
 AS
 	BEGIN
 		Select id_tmp_Producto,	ds_tmp_Producto, ds_tmp_Precio  from tm_Producto
 	End 
 go
--- Exec [spu_Consulta_CabFactura_Td]
-CREATE PROCEDURE [spu_Consulta_CabFactura_Td]
+-- Exec [spu_Sel_CabFactura_Td]
+CREATE PROCEDURE [spu_Sel_CabFactura_Td]
 AS
 	BEGIN
 	
@@ -157,8 +158,8 @@ AS
 	End 
 
 go
--- Exec [spu_Consulta_DetFactura_Td]
-CREATE PROCEDURE [spu_Consulta_DetFactura_Td]
+-- Exec [spu_Sel_DetFactura_Td]
+CREATE PROCEDURE [spu_Sel_DetFactura_Td]
 AS
 	BEGIN
 
@@ -179,5 +180,107 @@ AS
 go
 
 
+-- exec spu_ins_tm_Cliente 'Papelera Naciona S.A.','Calle Luisa Beasujeur 2450, LIma','20100047641'
+
+CREATE PROCEDURE [dbo].[spu_ins_tm_Cliente] (  
+     @ds_tmc_Cliente varchar(100) = NULL  
+    ,@tmc_ruc char(12) = NULL  
+    ,@tmc_Direccion varchar(100) = NULL  
+    ,@tmc_FechaRegistro datetime = NULL  
+)  
+AS  
+    BEGIN  
+        SET NOCOUNT, XACT_ABORT ON;  
+  
+        /* Create temporary table to store the output */  
+        CREATE TABLE #Output (  
+             [id_tmc_Cliente] int NULL  
+            ,[ds_tmc_Cliente] varchar(100) NULL  
+            ,[tmc_ruc] char(12) NULL  
+            ,[tmc_Direccion] varchar(100) NULL  
+            ,[tmc_FechaRegistro] datetime NULL  
+        );  
+  
+        /* Perform the create (insert) */  
+        INSERT INTO [dbo].[tm_Cliente] (  
+                [ds_tmc_Cliente]  
+               ,[tmc_ruc]  
+               ,[tmc_Direccion]  
+               ,[tmc_FechaRegistro]  
+        )  
+        OUTPUT  
+                Inserted.[id_tmc_Cliente]  
+               ,Inserted.[ds_tmc_Cliente]  
+               ,Inserted.[tmc_ruc]  
+               ,Inserted.[tmc_Direccion]  
+               ,Inserted.[tmc_FechaRegistro]  
+        INTO #Output (  
+                [id_tmc_Cliente]  
+               ,[ds_tmc_Cliente]  
+               ,[tmc_ruc]  
+               ,[tmc_Direccion]  
+               ,[tmc_FechaRegistro]  
+        )  
+        VALUES (  
+                @ds_tmc_Cliente  
+               ,@tmc_ruc  
+               ,@tmc_Direccion  
+               ,@tmc_FechaRegistro  
+        );  
+  
+        /* Select the inserted row from the output temporary table to return */  
+        SELECT  
+             [id_tmc_Cliente]  
+            ,[ds_tmc_Cliente]  
+            ,[tmc_ruc]  
+            ,[tmc_Direccion]  
+            ,[tmc_FechaRegistro]  
+        FROM  
+            #Output;  
+  
+    END;  
 
 
+CREATE PROCEDURE [dbo].[spu_ins_tm_Producto] (  
+     @ds_tmp_Producto varchar(50) = NULL  
+    ,@ds_tmp_Precio decimal(10, 3) = NULL  
+)  
+AS  
+    BEGIN  
+        SET NOCOUNT, XACT_ABORT ON;  
+  
+        /* Create temporary table to store the output */  
+        CREATE TABLE #Output (  
+             [id_tmp_Producto] int NULL  
+            ,[ds_tmp_Producto] varchar(50) NULL  
+            ,[ds_tmp_Precio] decimal(10, 3) NULL  
+        );  
+  
+        /* Perform the create (insert) */  
+        INSERT INTO [dbo].[tm_Producto] (  
+                [ds_tmp_Producto]  
+               ,[ds_tmp_Precio]  
+        )  
+        OUTPUT  
+                Inserted.[id_tmp_Producto]  
+               ,Inserted.[ds_tmp_Producto]  
+               ,Inserted.[ds_tmp_Precio]  
+        INTO #Output (  
+                [id_tmp_Producto]  
+               ,[ds_tmp_Producto]  
+               ,[ds_tmp_Precio]  
+        )  
+        VALUES (  
+                @ds_tmp_Producto  
+               ,@ds_tmp_Precio  
+        );  
+  
+        /* Select the inserted row from the output temporary table to return */  
+        SELECT  
+             [id_tmp_Producto]  
+            ,[ds_tmp_Producto]  
+            ,[ds_tmp_Precio]  
+        FROM  
+            #Output;  
+  
+    END;  
