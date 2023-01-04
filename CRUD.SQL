@@ -284,3 +284,35 @@ AS
             #Output;  
   
     END;  
+    
+    
+    
+CREATE PROCEDURE [dbo].[spu_del_tm_Cliente] (  
+     @id_tmc_Cliente int  
+)  
+AS  
+    BEGIN  
+  
+        SET NOCOUNT, XACT_ABORT ON;  
+  
+        DELETE FROM  
+            [dbo].[tm_Cliente]  
+        WHERE  
+            [id_tmc_Cliente] = @id_tmc_Cliente;  
+    END;  
+    
+    
+
+CREATE PROCEDURE [dbo].[spu_del_tm_Producto] (  
+     @id_tmp_Producto int  
+)  
+AS  
+    BEGIN  
+  
+        SET NOCOUNT, XACT_ABORT ON;  
+  
+        DELETE FROM  
+            [dbo].[tm_Producto]  
+        WHERE  
+            [id_tmp_Producto] = @id_tmp_Producto;  
+    END;      
