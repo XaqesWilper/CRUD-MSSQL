@@ -128,20 +128,21 @@ go
 -- STORED PROCEDURES DE CONSULTAS 
 --------------------------------------
 
--- Exec [spu_Sel_Cliente_Td]
-CREATE PROCEDURE [spu_Sel_Cliente_Td]
+-- Exec [spu_Sel_tm_Cliente]
+CREATE PROCEDURE [spu_Sel_tm_Cliente]
 AS
 	BEGIN
 		Select id_tmc_Cliente, ds_tmc_Cliente,	tmc_ruc,	tmc_Direccion  from tm_Cliente
 	End 
 go
--- Exec [spu_Sel_Producto_Td]
-CREATE PROCEDURE [spu_Sel_Producto_Td]
+-- Exec [spu_Sel_tm_Producto]
+CREATE PROCEDURE [spu_Sel_tm_Producto]
 AS
 	BEGIN
 		Select id_tmp_Producto,	ds_tmp_Producto, ds_tmp_Precio  from tm_Producto
 	End 
 go
+
 -- Exec [spu_Sel_CabFactura_Td]
 CREATE PROCEDURE [spu_Sel_CabFactura_Td]
 AS
